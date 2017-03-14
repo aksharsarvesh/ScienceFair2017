@@ -1,0 +1,70 @@
+package finalProject;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
+
+public class HeartData {
+	private ArrayList <double[]> data = new ArrayList <double[]> ();
+	
+	public HeartData(String file) {
+		try {
+			Scanner s = new Scanner(new File(file));
+			
+			while (s.hasNextLine()) {
+				String line = s.nextLine();
+				String[] parts = line.split(",");
+				double[] values = new double[parts.length];
+				for (int i = 0 ; i < values.length ; i++) {
+					if(i == 16){
+						values[34] = Double.parseDouble(parts[16]);
+					}
+					if (i == 34) {
+						values[16] = Double.parseDouble(parts[34]);
+					}
+					else if(parts[i].equals("")){
+						values[i] = 0;
+					}
+					else if (! parts[i].equals("?"))
+						values[i] = Double.parseDouble(parts[i]);
+				}
+				
+				data.add(values);
+			}
+			//loop through the data and normalize it to 0 ... 1
+			double[]min = new double[36];
+			double[]max = new double[36];
+			for(int i = 0;i<data.size();i++){
+				double[]sample = data.get(i);
+				for(int j = 0; j<36;j++){
+					if(sample[j]<min[j]){
+						min[j] = sample[j];
+					}
+					if(sample[j]>max[j]){
+						max[j] = sample[j];
+					}
+				}
+			}
+			for(int i = 0;i<data.size();i++){
+				double[] sample = data.get(i);
+				//normalize the range 0...1
+				for(int j = 0; j<36;j++){
+					sample[j] = (sample[j]-min[j])/(max[j]-min[j]);
+				}
+				//System.out.println(Arrays.toString(sample));
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public double[] get(int index) {
+		return data.get(index);
+	}
+	
+	public int size() {
+		return data.size();
+	}
+}
