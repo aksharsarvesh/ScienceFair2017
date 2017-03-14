@@ -1,0 +1,24 @@
+package Neuralnet;
+
+public class Layer {
+	Neuron[] neuron;
+	/**
+	 * 
+	 * @param neurons-> neurons in this layer
+	 * @param inputs -> Last layer's neurons
+	 */
+	public Layer(int neurons, int inputs){
+		neuron = new Neuron[neurons];
+		//create a neuron in this layer
+		for(int i = 0; i< neuron.length;i++){
+			neuron[i] = new Neuron(inputs);
+		}
+	}
+	
+	public int size(){
+		return neuron.length;
+	}
+	public Neuron getNeuron(int index){
+		return neuron[index];
+	}
+}
